@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CYOU: The Neon Cipher</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      backdrop-filter: brightness(0.8) contrast(1.1);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #f990e8;
+      text-shadow: 2px 2px 10px #000000;
+    }
+
+    #gameBox {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 700px;
+      text-align: center;
+      box-shadow: 0 0 20px #0ad2d3aa;
+      border: 2px solid #f990e8;
+    }
+
+    #story {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      min-height: 100px;
+      white-space: pre-wrap;
+    }
+
+    .choice-btn {
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #0ad2d3;
+      color: #000000;
+      cursor: pointer;
+      box-shadow: 0 0 10px #f990e8aa;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .choice-btn:hover {
+      transform: scale(1.05);
+      background: #f990e8;
+      color: #000000;
+    }
+
+    #end {
+      font-size: 1.5rem;
+      color: #0ad2d3;
+      margin-top: 20px;
+      text-shadow: 1px 1px 5px #000000;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 10px;
+      width: 80%;
+    }
+
+    button#submit {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>The Neon Cipher</h1>
+  <div id="gameBox">
+    <div id="story">Hello there. You have just awoken in a glowing cave. A voice says: “Escape requires solving three simple riddles.”</div>
+    <div id="inputArea">
+      <button class="choice-btn" onclick="startGame()">Begin</button>
+    </div>
+    <div id="end"></div>
+  </div>
+
+  <script>
+    let step = 0;
+    const riddles = [
+      {
+        question: `Door 1 lights up in neon teal...\n\nRIDDLE: What has hands but can’t clap?`,
+        answer: "clock"
+      },
+      {
+        question: `Door 2 glows electric pink...\n\nRIDDLE: The more of me you take, the more you leave behind. What am I?`,
+        answer: "footsteps"
+      },
+      {
+        question: `The final door pulses brightly...\n\nRIDDLE: I’m tall when I’m young, and short when I’m old. What am I?`,
+        answer: "candle"
+      }
+    ];
+
+    function startGame() {
+      step = 0;
+      showRiddle();
+    }
+
+    function showRiddle() {
+      const current = riddles[step];
+      document.getElementById("story").innerText = current.question;
+      document.getElementById("inputArea").innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Type your answer...">
+        <br>
+        <button class="choice-btn" id="submit" onclick="checkAnswer()">Submit</button>
+      `;
+    }
+
+    function checkAnswer() {
+      const userInput = document.getElementById("userAnswer").value.trim().toLowerCase();
+      const correctAnswer = riddles[step].answer.toLowerCase();
+
+      if (userInput === correctAnswer) {
+        step++;
+        if (step < riddles.length) {
+          showRiddle();
+        } else {
+          endGame(true);
+        }
+      } else {
+        endGame(false);
+      }
+    }
+
+    function endGame(won) {
+      document.getElementById("inputArea").innerHTML = `
+        <button class="choice-btn" onclick="location.reload()">Play Again</button>
+      `;
+      document.getElementById("story").innerText = "";
+      document.getElementById("end").innerText = won
+        ? "🎉 You solved all three riddles. The vault opens. Freedom is yours."
+        : "💀 That was not the answer. CYOU has claimed you.";
+    }
+  </script>
+</body>
+</html>
+
+
